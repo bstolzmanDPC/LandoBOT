@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 using RedditSharp;
 
 namespace LandoBOT.Service
 {
     public class Program
     {
+		private static IConfigurationRoot Configuration;
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -20,6 +22,9 @@ namespace LandoBOT.Service
                 .ConfigureServices((hostContext, services) =>
                 {
 					//Add services here
+					//Configuration = (IConfigurationRoot)hostContext.Configuration;
+					var config = hostContext.Configuration.Get<BotConfig>();
+					services.AddSingleton<BotConfig>(config);
 					services.AddHostedService<PostRetrievalService>();
                 });
     }
